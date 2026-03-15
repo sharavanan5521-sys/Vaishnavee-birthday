@@ -37,7 +37,7 @@ const CARDS = [
   },
   {
     id: "wish",
-    route: "/wish",
+    route: "/wish-card",
     emoji: "💌",
     title: "My Wish For You",
     sub: "open with love",
