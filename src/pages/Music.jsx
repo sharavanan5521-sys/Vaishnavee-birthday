@@ -22,20 +22,20 @@ const MEMORIES = [
     right: "our first ever music convo!!",
   },
   {
-    left:  "you sent this at 2am 🌙",
-    right: "i replayed it 100 times ngl",
+    left:  "The song I asked you to sing 🌙",
+    right: "You refused to sing, and we had a long convo.",
   },
   {
-    left:  "this one hits different 😭",
-    right: "literally cried together to this",
+    left:  "I asked who's your fav music director 🤔",
+    right: "You said Sai Abhyankkar!",
   },
   {
-    left:  "ur fav ar rahman era 🎶",
-    right: "we talked abt this for hours!!",
+    left:  "I said this album is overrated!",
+    right: "You said that you love this album🎶",
   },
   {
     left:  "this is SO you vaishu 🌸",
-    right: "our song foreverrr 💗",
+    right: "I believe this song belongs to you 💗",
   },
 ];
 
