@@ -13,7 +13,7 @@ const PARAGRAPHS = [
   { type: "body",     text: "Thank you, Vaishnavee, for all of this. 🌼" },
   { type: "emphasis", text: "Last but not least — from this birthday onwards, please take care of yourself first. I want you to be at peace and to be happy. I've told you this many times and I'll keep telling you. You have such a good heart, Vaishnavee. You are honestly one of the kindest and most genuine people I have ever met. 👑" },
   { type: "body",     text: "I think that's all from my side — I've said everything I wanted to say. I might have forgotten something but that's okay, I'll tell you when I remember. 😄" },
-  { type: "closing",  text: "Once again — HAPPY BIRTHDAY VAISHNAVEEEE!! 🎂🎊  I always adore you. 💗🌸" },
+  { type: "closing",  text: "Once again — HAPPY BIRTHDAY VAISHNAVEEEE!! 🎂🎊\ni always adore you. 💗🌸" },
 ];
 
 /* ─────────────────────────────────────────────
@@ -119,6 +119,7 @@ export default function WishCard() {
   const [typedTexts,   setTypedTexts]   = useState(Array(PARAGRAPHS.length).fill(""));
   const [showFlorks,   setShowFlorks]   = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
 
   const timerRef  = useRef(null);
   const charRef   = useRef(0);
@@ -177,7 +178,7 @@ export default function WishCard() {
     const base = { lineHeight: 1.85, position: "relative" };
     if (type === "heading")  return { ...base, fontFamily:"'Bubblegum Sans',cursive", fontSize:"clamp(20px,4vw,30px)", color:"#ec4899", textShadow:"2px 2px 0 rgba(251,113,133,.2)", lineHeight:1.3 };
     if (type === "emphasis") return { ...base, fontFamily:"'Quicksand',sans-serif", fontWeight:500, fontSize:"clamp(13px,2.2vw,15px)", color:"#be185d", background:"rgba(252,231,243,.55)", borderLeft:"3px solid #f472b6", borderRadius:"0 10px 10px 0", padding:"10px 14px" };
-    if (type === "closing")  return { ...base, fontFamily:"'Great Vibes',cursive", fontSize:"clamp(22px,4vw,34px)", color:"#ec4899", textShadow:"2px 2px 0 rgba(251,113,133,.2)", textAlign:"center", lineHeight:1.4 };
+    if (type === "closing")  return { ...base, fontFamily:"'Great Vibes',cursive", fontSize:"clamp(22px,4vw,34px)", color:"#ec4899", textShadow:"2px 2px 0 rgba(251,113,133,.2)", textAlign:"center", lineHeight:1.4, whiteSpace:"pre-line" };
     return { ...base, fontFamily:"'Quicksand',sans-serif", fontWeight:500, fontSize:"clamp(13px,2.2vw,15px)", color:"rgba(159,18,57,.82)" };
   };
 
@@ -274,6 +275,92 @@ export default function WishCard() {
         .hub-btn { padding:14px 52px; background:linear-gradient(135deg,#f472b6,#ec4899); border:none; border-radius:100px; color:#fff; font-family:'Bubblegum Sans',cursive; font-size:17px; cursor:pointer; box-shadow:0 8px 26px rgba(244,114,182,.45); transition:transform .25s,box-shadow .25s; animation:fadeUp .8s ease .5s both; }
         .hub-btn:hover { transform:translateY(-3px); box-shadow:0 14px 36px rgba(244,114,182,.58); }
 
+        /* easter egg */
+        .seal-wrap { position:relative; display:inline-flex; flex-direction:column; align-items:center; }
+        .seal { cursor:pointer; }
+        .seal:hover { transform:scale(1.08); }
+
+        .egg-hint {
+          display:flex; flex-direction:column; align-items:center; gap:2px;
+          animation:fadeUp .7s cubic-bezier(.34,1.56,.64,1) 1.2s both;
+        }
+        .egg-bubble {
+          background:white; border:2px solid rgba(244,114,182,.35);
+          border-radius:14px; padding:6px 12px;
+          font-family:'Bubblegum Sans',cursive; font-size:12px; color:#be185d;
+          box-shadow:0 3px 12px rgba(244,114,182,.18); white-space:nowrap;
+          position:relative;
+        }
+        .egg-bubble::after {
+          content:''; position:absolute; bottom:-8px; left:50%;
+          transform:translateX(-50%);
+          border:5px solid transparent; border-top-color:white;
+        }
+        .egg-bubble::before {
+          content:''; position:absolute; bottom:-10px; left:50%;
+          transform:translateX(-50%);
+          border:6px solid transparent; border-top-color:rgba(244,114,182,.35);
+        }
+
+        /* modal overlay */
+        .egg-overlay {
+          position:fixed; inset:0; z-index:300;
+          background:rgba(255,228,239,.82); backdrop-filter:blur(6px);
+          display:flex; align-items:center; justify-content:center;
+          padding:20px;
+          animation:fadeIn .35s ease both;
+        }
+        .egg-card {
+          background:white; border:2px solid rgba(244,114,182,.3);
+          border-radius:28px; padding:clamp(24px,5vw,36px) clamp(20px,5vw,36px);
+          max-width:440px; width:100%;
+          max-height:86vh; overflow-y:auto;
+          box-shadow:0 16px 56px rgba(244,114,182,.22),0 2px 8px rgba(0,0,0,.05);
+          display:flex; flex-direction:column; align-items:center; gap:14px;
+          position:relative; scroll-behavior:smooth;
+          animation:wishPop .55s cubic-bezier(.34,1.56,.64,1) both;
+        }
+        .egg-card::-webkit-scrollbar { width:4px; }
+        .egg-card::-webkit-scrollbar-thumb { background:rgba(244,114,182,.3); border-radius:2px; }
+        @keyframes wishPop { from{opacity:0;transform:scale(.82)} to{opacity:1;transform:scale(1)} }
+        .egg-close {
+          position:sticky; top:0; align-self:flex-end;
+          width:32px; height:32px; border-radius:50%;
+          background:rgba(244,114,182,.12); border:none;
+          font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+          transition:background .2s, transform .2s; flex-shrink:0; z-index:2;
+        }
+        .egg-close:hover { background:rgba(244,114,182,.28); transform:scale(1.1); }
+        .egg-emoji { font-size:48px; animation:floatBob 2.4s ease-in-out infinite; }
+        .egg-title {
+          font-family:'Bubblegum Sans',cursive; font-size:clamp(18px,4vw,22px);
+          color:#ec4899; text-align:center;
+          text-shadow:2px 2px 0 rgba(251,113,133,.18);
+        }
+        .egg-poem-title {
+          font-family:'Great Vibes',cursive; font-size:clamp(20px,4vw,28px);
+          color:#be185d; text-align:center; margin-bottom:2px;
+        }
+        .egg-divider {
+          width:60px; height:2px; border-radius:1px;
+          background:linear-gradient(90deg,transparent,rgba(244,114,182,.5),transparent);
+        }
+        .egg-stanza {
+          font-family:'Quicksand',sans-serif; font-weight:500;
+          font-size:clamp(12.5px,3vw,14.5px); color:rgba(159,18,57,.82);
+          text-align:center; line-height:2; white-space:pre-line;
+          width:100%;
+        }
+        .egg-closing {
+          font-family:'Quicksand',sans-serif; font-weight:600;
+          font-size:clamp(12px,3vw,13.5px); color:rgba(190,24,93,.6);
+          text-align:center; font-style:italic; margin-top:4px;
+        }
+        .egg-tag {
+          font-family:'Great Vibes',cursive; font-size:clamp(18px,4vw,26px);
+          color:#be185d; margin-top:2px;
+        }
+
         /* floaters */
         .petal { position:fixed; top:-20px; border-radius:50% 0 50% 0; opacity:0; pointer-events:none; animation:petalFall linear infinite; z-index:10; will-change:transform,opacity; }
         .hf    { position:fixed; pointer-events:none; opacity:0; animation:heartRise linear infinite; z-index:10; will-change:transform,opacity; }
@@ -337,7 +424,19 @@ export default function WishCard() {
         {/* ── FINALE ── */}
         {phase === "finale" && (
           <div className="finale">
-            <div className="seal">🌸</div>
+
+            {/* seal + easter egg hint */}
+            <div className="seal-wrap">
+              <div className="egg-hint">
+                <div className="egg-bubble">psst… tap me for a secret 🥚</div>
+                <svg width="18" height="10" viewBox="0 0 18 10" style={{ display:"block", margin:"0 auto" }}>
+                  <path d="M9 10 L0 0 L18 0Z" fill="white" stroke="rgba(244,114,182,.35)" strokeWidth="1.5" strokeLinejoin="round"/>
+                  <path d="M9 8 L1.5 1 L16.5 1Z" fill="white"/>
+                </svg>
+              </div>
+              <div className="seal" onClick={() => setShowEasterEgg(true)}>🌸</div>
+            </div>
+
             <p className="fin-quote">with all my heart, always —{"\n"}happy 21st, Vaishnavee 👑💗</p>
             {showFlorks && (
               <div className="flork-row">
@@ -349,6 +448,49 @@ export default function WishCard() {
             <button className="hub-btn" onClick={() => navigate("/hub")}>
               back to all your gifts 🎀
             </button>
+          </div>
+        )}
+
+        {/* ── EASTER EGG POPUP ── */}
+        {showEasterEgg && (
+          <div className="egg-overlay" onClick={() => setShowEasterEgg(false)}>
+            <div className="egg-card" onClick={e => e.stopPropagation()}>
+              <button className="egg-close" onClick={() => setShowEasterEgg(false)}>✕</button>
+              <div className="egg-emoji">🥚✨</div>
+              <p className="egg-title">you found the secret!! 🎉</p>
+              <div className="egg-divider"/>
+              <p className="egg-poem-title">For Vaishnavee</p>
+
+              <p className="egg-stanza">{`✨ Among the countless stars that fill the night,
+the universe chose carefully — and placed
+a soul like yours where galaxies burn bright, 🌌
+a heart so vast, no cosmos could be traced.`}</p>
+
+              <p className="egg-stanza">{`🌊 Your eyes hold depth like oceans, still and deep,
+where tides of kindness quietly find their shore,
+and in your smile — that dimple — secrets keep, 🌸
+a constellation no one had seen before.`}</p>
+
+              <p className="egg-stanza">{`💫 They say the sea was born from something whole,
+from every gentle thing the heavens spilled —
+I think they must have borrowed from your soul, 🤍
+the warmth, the calm, the love with which it's filled.`}</p>
+
+              <p className="egg-stanza">{`⭐ The stars don't shine to light the endless sky —
+they shine because somewhere, Vaishnavee smiles,
+and all the space between the stars and I 💗
+is smaller than the kindness in your eyes.`}</p>
+
+              <p className="egg-stanza">{`🎂 So here you are, at twenty-one today,
+a universe of grace inside one heart —
+the seas will carry what I cannot say: 👑
+you are, and always were, a work of art.`}</p>
+
+              <p style={{ fontSize:"22px", margin:"2px 0" }}>🌸✨</p>
+              <div className="egg-divider"/>
+              <p className="egg-closing">you deserve every single pixel of this. never forget that. 💗</p>
+              <p className="egg-tag">— always yours, Spider-Man 🌼</p>
+            </div>
           </div>
         )}
 
