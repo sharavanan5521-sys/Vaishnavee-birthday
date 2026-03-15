@@ -93,7 +93,7 @@ const JasmineBouquet = ({ bloomCount, allPlayed }) => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
-      <svg viewBox="0 0 400 360" width="340" height="340" style={{ overflow: "visible", flexShrink: 0 }}>
+      <svg viewBox="0 0 400 360" width="100%" height="auto" style={{ overflow: "visible", flexShrink: 0, maxWidth: "340px", minWidth: "180px" }}>
         {/* green stems */}
         <g stroke="#86efac" strokeWidth="2.2" fill="none" strokeLinecap="round">
           <path d="M200 340 Q182 282 155 235 Q138 200 136 165"/>
@@ -356,7 +356,7 @@ export default function Music() {
         *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
         .music-page {
-          width:100vw; min-height:100vh;
+          width:100%; min-height:100vh;
           background:linear-gradient(160deg,#fff0f5 0%,#ffe4ef 50%,#ffd6e8 100%);
           display:flex; flex-direction:column;
           align-items:center;
@@ -391,7 +391,7 @@ export default function Music() {
         }
         .music-title {
           font-family:'Bubblegum Sans',cursive;
-          font-size:clamp(24px,5vw,40px); color:#ec4899;
+          font-size:clamp(18px,5vw,40px); color:#ec4899;
           text-shadow:2px 2px 0 rgba(251,113,133,.2);
         }
         .music-sub {
@@ -495,21 +495,26 @@ export default function Music() {
           display:grid;
           grid-template-columns:1fr 1fr;
           gap:28px; align-items:start;
-          padding:0 28px;
+          padding:0 20px;
         }
         /* left col: player + cards */
-        .left-col { display:flex; flex-direction:column; gap:16px; }
+        .left-col { display:flex; flex-direction:column; gap:16px; min-width:0; }
         /* right col: florks + bouquet */
         .right-col {
           display:flex; flex-direction:column;
           align-items:center; gap:8px;
-          position:sticky; top:24px;
+          position:sticky; top:24px; min-width:0;
         }
 
         /* on small screens stack vertically */
         @media (max-width: 700px) {
-          .main-layout { grid-template-columns:1fr; padding:0 16px; }
+          .main-layout { grid-template-columns:1fr; padding:0 16px; gap:16px; }
           .right-col { position:static; }
+        }
+        @media (max-width: 480px) {
+          .main-layout { padding:0 12px; gap:12px; }
+          .now-playing { padding:14px 14px; }
+          .song-card   { padding:10px 12px; gap:10px; }
         }
 
         /* ── back button ── */
@@ -525,7 +530,7 @@ export default function Music() {
         .back-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(244,114,182,.55); }
 
         /* floating music notes */
-        .note { position:fixed; pointer-events:none; font-size:18px; animation:noteFloat linear infinite; opacity:0; }
+        .note { position:fixed; pointer-events:none; font-size:18px; animation:noteFloat linear infinite; opacity:0; will-change:transform,opacity; }
         @keyframes noteFloat {
           0%   { opacity:0; transform:translateY(0) rotate(0deg); }
           10%  { opacity:.7; }

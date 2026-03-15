@@ -82,13 +82,13 @@ export default function Hub() {
         @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Great+Vibes&family=Quicksand:wght@300;400;500&display=swap');
 
         .hub-page {
-          width: 100vw; min-height: 100vh;
+          width: 100%; min-height: 100vh;
           background: linear-gradient(160deg, #fff0f5 0%, #ffe4ef 45%, #ffd6e8 100%);
           display: flex; flex-direction: column;
           align-items: center; justify-content: center;
           font-family: 'Quicksand', sans-serif;
-          position: relative; overflow: hidden;
-          padding: 32px 20px 48px;
+          position: relative; overflow-x: hidden;
+          padding: 32px 16px 48px;
         }
         .hub-page::before {
           content: ''; position: fixed; inset: 0; pointer-events: none;
@@ -112,7 +112,7 @@ export default function Hub() {
         }
         .hub-title {
           font-family: 'Bubblegum Sans', cursive;
-          font-size: clamp(28px, 5vw, 46px);
+          font-size: clamp(20px, 5vw, 46px);
           color: #ec4899;
           text-shadow: 2px 2px 0 rgba(251,113,133,.22);
           line-height: 1.1;
@@ -130,6 +130,10 @@ export default function Hub() {
           gap: 18px;
           width: 100%; max-width: 560px;
         }
+        @media (max-width: 400px) {
+          .hub-grid { grid-template-columns: 1fr; gap: 12px; }
+          .hub-card  { padding: 20px 16px 18px; }
+        }
 
         /* ── card ── */
         .hub-card {
@@ -143,6 +147,7 @@ export default function Hub() {
           transition: transform .32s cubic-bezier(.34,1.56,.64,1), box-shadow .28s ease, border-color .28s ease;
           animation: cardPop .7s cubic-bezier(.34,1.56,.64,1) forwards;
           backdrop-filter: blur(4px);
+          will-change: transform, opacity;
         }
         .hub-card:nth-child(1) { animation-delay: .55s; }
         .hub-card:nth-child(2) { animation-delay: .72s; }
@@ -212,7 +217,7 @@ export default function Hub() {
         }
 
         /* petals */
-        .petal { position:fixed; top:-20px; border-radius:50% 0 50% 0; opacity:0; pointer-events:none; animation:petalFall linear infinite; }
+        .petal { position:fixed; top:-20px; border-radius:50% 0 50% 0; opacity:0; pointer-events:none; animation:petalFall linear infinite; will-change:transform,opacity; }
         @keyframes petalFall {
           0%  { transform:translateY(0) rotate(0deg) translateX(0); opacity:0; }
           8%  { opacity:.65; }
@@ -245,7 +250,7 @@ export default function Hub() {
 
         {/* 2x2 grid */}
         <div className="hub-grid">
-          {CARDS.map((card, i) => (
+          {CARDS.map((card) => (
             <div
               key={card.id}
               className={`hub-card${zooming === card.id ? " zooming" : ""}`}

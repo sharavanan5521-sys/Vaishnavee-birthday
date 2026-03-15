@@ -46,6 +46,21 @@ const HEART_POS = PHOTOS.map((_, i) => {
 });
 
 /* ─────────────────────────────────────────────
+   SPARK DOTS — pre-generated to avoid Math.random() in render
+───────────────────────────────────────────── */
+const SPARK_DATA = [
+  [5,8],[15,22],[88,12],[95,30],[3,55],[92,60],[8,82],[90,78],[48,5],[50,95],
+  [25,90],[72,88],[30,15],[65,18],[20,45],[78,50],
+].map(([l, t], i) => ({
+  l, t,
+  w: 2 + (i * 137 % 4) + 1,
+  h: 2 + (i * 97  % 4) + 1,
+  dur: `${1.4 + (i * 0.163 % 2.6).toFixed(2)}s`,
+  del: `${(i * 0.22 % 3.5).toFixed(2)}s`,
+  color: ["#f472b6","#fda4af","#fbbf24","#e879f9","#fbcfe8"][i % 5],
+}));
+
+/* ─────────────────────────────────────────────
    CONFETTI
 ───────────────────────────────────────────── */
 const CONFETTI_COLORS = ["#f472b6","#ec4899","#fbbf24","#fb7185","#e879f9","#fda4af","#f9a8d4","#a78bfa"];
@@ -209,12 +224,12 @@ export default function Gallery() {
 
         /* ── page shell ── */
         .gp {
-          width:100vw; min-height:100vh;
+          width:100%; min-height:100vh;
           background:linear-gradient(160deg,#fff0f5 0%,#ffe4ef 50%,#ffd6e8 100%);
           display:flex; flex-direction:column;
           align-items:center; justify-content:center;
           font-family:'Quicksand',sans-serif;
-          position:relative; overflow:hidden;
+          position:relative; overflow-x:hidden;
           padding:24px 16px 40px; user-select:none;
         }
         .gp::before {
@@ -266,7 +281,7 @@ export default function Gallery() {
         .cam-slot    { position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:84px; height:5px; border-radius:2px; background:rgba(190,24,93,.18); }
 
         /* clothesline */
-        .lines-wrap { display:flex; flex-direction:column; gap:14px; width:100%; max-width:740px; }
+        .lines-wrap { display:flex; flex-direction:column; gap:14px; width:100%; max-width:740px; overflow-x:hidden; }
         .line-row   { display:flex; flex-direction:column; gap:0; }
 
         .string {
@@ -275,7 +290,7 @@ export default function Gallery() {
           border-radius:2px; box-shadow:0 1px 3px rgba(0,0,0,.1);
         }
 
-        .line-photos { display:flex; justify-content:space-evenly; align-items:flex-start; padding:0 8px; margin-top:-1px; }
+        .line-photos { display:flex; justify-content:space-evenly; align-items:flex-start; padding:0 4px; margin-top:-1px; flex-wrap:nowrap; }
 
         .hung {
           display:flex; flex-direction:column; align-items:center;
@@ -292,8 +307,8 @@ export default function Gallery() {
         }
         .clip::after { content:''; display:block; margin:5px auto 0; width:7px; height:2px; background:rgba(0,0,0,.16); border-radius:1px; }
 
-        .mini-pol  { background:white; padding:3px 3px 12px; box-shadow:0 3px 10px rgba(0,0,0,.12); border-radius:2px; width:58px; }
-        .mini-img  { width:52px; height:52px; background:#fce7f3; overflow:hidden; }
+        .mini-pol  { background:white; padding:3px 3px 12px; box-shadow:0 3px 10px rgba(0,0,0,.12); border-radius:2px; width:clamp(40px,9vw,58px); flex-shrink:0; }
+        .mini-img  { width:100%; aspect-ratio:1; background:#fce7f3; overflow:hidden; }
         .mini-img img { width:100%; height:100%; object-fit:cover; object-position:top center; display:block; }
         .mini-cap  { font-family:'Bubblegum Sans',cursive; font-size:5.5px; color:#be185d; text-align:center; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
@@ -320,7 +335,7 @@ export default function Gallery() {
 
         .zoom-pol {
           background:white; padding:14px 14px 52px;
-          border-radius:3px; width:280px;
+          border-radius:3px; width:min(280px,88vw);
           box-shadow:0 10px 36px rgba(0,0,0,.13);
           animation:zoomPol .78s cubic-bezier(.22,.68,.36,1.2) forwards;
           transform-origin:center center;
@@ -330,7 +345,7 @@ export default function Gallery() {
           60%  { transform:scale(1.04) rotate(-1deg); opacity:1; }
           100% { transform:scale(1) rotate(0deg); opacity:1; }
         }
-        .zoom-img { width:252px; height:286px; background:#fce7f3; overflow:hidden; }
+        .zoom-img { width:100%; aspect-ratio:252/286; background:#fce7f3; overflow:hidden; }
         .zoom-img img { width:100%; height:100%; object-fit:cover; object-position:top center; display:block; }
 
         /* ════════════════════════════
@@ -350,7 +365,7 @@ export default function Gallery() {
         }
 
         .stage {
-          position:relative; width:316px; height:428px;
+          position:relative; width:min(316px,90vw); height:428px;
           cursor:pointer; animation:fadeIn .5s ease both;
         }
 
@@ -359,7 +374,7 @@ export default function Gallery() {
           display:flex; align-items:center; justify-content:center;
           opacity:0; pointer-events:none;
           filter:drop-shadow(0 10px 26px rgba(244,114,182,.18));
-          will-change:transform, opacity;
+          will-change:transform,opacity;
         }
         .pol.active {
           opacity:1; pointer-events:auto; z-index:10;
@@ -378,10 +393,10 @@ export default function Gallery() {
         .pol-inner {
           background:white; padding:14px 14px 52px; border-radius:3px;
           box-shadow:0 8px 32px rgba(0,0,0,.11),0 2px 8px rgba(0,0,0,.06);
-          width:280px;
+          width:min(280px,86vw);
         }
         .pol-photo {
-          width:252px; height:286px; overflow:hidden;
+          width:100%; aspect-ratio:252/286; overflow:hidden;
           position:relative; background:#fce7f3; border-radius:2px;
         }
         .pol-photo img { width:100%; height:100%; object-fit:cover; object-position:top center; display:block; }
@@ -428,9 +443,10 @@ export default function Gallery() {
 
         .heart-title {
           font-family:'Bubblegum Sans',cursive;
-          font-size:clamp(18px,4vw,30px); color:#ec4899;
+          font-size:clamp(14px,4vw,30px); color:#ec4899;
           text-shadow:2px 2px 0 rgba(251,113,133,.2);
           animation:fadeUp .7s ease .4s both; z-index:1;
+          text-align:center; padding:0 12px;
         }
 
         /* heart scales to fit any screen */
@@ -447,7 +463,7 @@ export default function Gallery() {
         }
 
         /* sparkle dots */
-        .spark { position:absolute; border-radius:50%; pointer-events:none; animation:sparkle ease-in-out infinite; }
+        .spark { position:absolute; border-radius:50%; pointer-events:none; animation:sparkle ease-in-out infinite; will-change:transform,opacity; }
         @keyframes sparkle { 0%,100%{opacity:0;transform:scale(0)} 50%{opacity:.6;transform:scale(1)} }
 
         /* each polaroid in the heart */
@@ -500,8 +516,8 @@ export default function Gallery() {
         }
         .fin-heart { font-size:74px; animation:heartbeat 1.4s ease-in-out infinite; margin-bottom:4px; }
         @keyframes heartbeat { 0%,100%{transform:scale(1)} 50%{transform:scale(1.13)} }
-        .fin-title { font-family:'Great Vibes',cursive; font-size:clamp(30px,7vw,56px); color:#ec4899; text-align:center; line-height:1.2; animation:fadeUp .8s ease .2s both; }
-        .fin-msg   { font-family:'Quicksand',sans-serif; font-weight:500; font-size:15px; color:rgba(190,24,93,.7); text-align:center; max-width:320px; line-height:1.8; margin-top:10px; animation:fadeUp .8s ease .44s both; }
+        .fin-title { font-family:'Great Vibes',cursive; font-size:clamp(22px,7vw,56px); color:#ec4899; text-align:center; line-height:1.2; animation:fadeUp .8s ease .2s both; max-width:90vw; }
+        .fin-msg   { font-family:'Quicksand',sans-serif; font-weight:500; font-size:clamp(13px,3.5vw,15px); color:rgba(190,24,93,.7); text-align:center; max-width:min(320px,90vw); line-height:1.8; margin-top:10px; animation:fadeUp .8s ease .44s both; }
         .fin-florks{ display:flex; align-items:flex-end; gap:14px; margin:14px 0 4px; animation:fadeUp .8s ease .64s both; }
         .hub-btn { margin-top:14px; padding:12px 36px; background:linear-gradient(135deg,#f472b6,#ec4899); border:none; border-radius:100px; color:#fff; font-family:'Bubblegum Sans',cursive; font-size:15px; cursor:pointer; box-shadow:0 6px 20px rgba(244,114,182,.4); animation:fadeUp .8s ease .84s both; transition:transform .2s,box-shadow .2s; }
         .hub-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(244,114,182,.55); }
@@ -649,16 +665,13 @@ export default function Gallery() {
               <div className="heart-inner" ref={heartRef}>
 
                 {/* pink sparkle dots */}
-                {[
-                  [5,8],[15,22],[88,12],[95,30],[3,55],[92,60],[8,82],[90,78],[48,5],[50,95],
-                  [25,90],[72,88],[30,15],[65,18],[20,45],[78,50],
-                ].map(([l, t], i) => (
+                {SPARK_DATA.map((s, i) => (
                   <div key={i} className="spark" style={{
-                    left:`${l}%`, top:`${t}%`,
-                    width:`${2+Math.random()*4}px`, height:`${2+Math.random()*4}px`,
-                    background:["#f472b6","#fda4af","#fbbf24","#e879f9","#fbcfe8"][i%5],
-                    animationDuration:`${1.4+Math.random()*2.6}s`,
-                    animationDelay:`${Math.random()*3.5}s`,
+                    left:`${s.l}%`, top:`${s.t}%`,
+                    width:`${s.w}px`, height:`${s.h}px`,
+                    background: s.color,
+                    animationDuration: s.dur,
+                    animationDelay: s.del,
                   }}/>
                 ))}
 

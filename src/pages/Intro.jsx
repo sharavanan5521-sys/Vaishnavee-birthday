@@ -79,7 +79,7 @@ const FlorkTop = () => (
 const FlorkBottom = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 58" width="115"
     className="flork"
-    style={{ left: "50%", bottom: "1%", transform: "translateX(-50%)", "--r": "2deg", animationDelay: "1.6s, 1.6s" }}>
+    style={{ left: "calc(50% - 58px)", bottom: "1%", "--r": "2deg", animationDelay: "1.6s, 1.6s" }}>
     <ellipse cx="65" cy="42" rx="38" ry="14" fill="white" stroke="#f472b6" strokeWidth="2" />
     <circle cx="22" cy="30" r="16" fill="white" stroke="#f472b6" strokeWidth="2" />
     <text x="14" y="28" fontSize="10" fill="#be185d" fontFamily="Bubblegum Sans, cursive">x</text>
@@ -162,7 +162,7 @@ export default function Intro() {
         @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Great+Vibes&family=Quicksand:wght@300;400;500&display=swap');
 
         .intro-page {
-          width: 100vw; height: 100vh; overflow: hidden;
+          width: 100%; min-height: 100vh; overflow-x: hidden;
           background: linear-gradient(160deg, #fff0f5 0%, #ffe4ef 45%, #ffd6e8 100%);
           display: flex; flex-direction: column;
           align-items: center; justify-content: center;
@@ -179,6 +179,7 @@ export default function Intro() {
         .flork {
           position: fixed; pointer-events: none; opacity: 0;
           animation: floatIn .8s ease forwards, floatBob ease-in-out infinite;
+          will-change: transform, opacity;
         }
         @keyframes floatIn {
           from { opacity:0; transform: translateY(14px) rotate(var(--r,0deg)); }
@@ -223,42 +224,50 @@ export default function Intro() {
         .name-card {
           background:rgba(255,255,255,.78);
           border:2px solid rgba(244,114,182,.25);
-          border-radius:22px; padding:14px 42px 16px;
-          margin-bottom:16px;
+          border-radius:22px; padding:14px clamp(16px,8vw,42px) 16px;
+          margin-bottom:16px; max-width:92vw;
           box-shadow:0 6px 32px rgba(244,114,182,.18),0 1px 4px rgba(0,0,0,.04);
           backdrop-filter:blur(6px);
           transition: opacity 1.4s ease, transform 1.4s cubic-bezier(.34,1.56,.64,1);
         }
         .name-text {
           font-family:'Bubblegum Sans',cursive;
-          font-size: clamp(44px, 8vw, 90px);
+          font-size: clamp(36px, 8vw, 90px);
           letter-spacing:.04em; line-height:1; color:#ec4899;
           text-shadow:3px 3px 0 rgba(251,113,133,.28),5px 5px 0 rgba(244,114,182,.12);
         }
         .bday-text {
           font-family:'Great Vibes',cursive;
-          font-size:clamp(30px,4.5vw,52px);
+          font-size:clamp(22px,4.5vw,52px);
           color:#be185d;
           transition: opacity 1.6s ease, transform 1.6s ease;
         }
 
         /* meme badge */
         .meme-badge {
-          position:absolute; top:-28px; right:-74px;
+          position:absolute; top:-28px; right:clamp(-10px,-10vw,-74px);
           background:#fbbf24; color:#78350f;
-          font-family:'Bubblegum Sans',cursive; font-size:12px;
+          font-family:'Bubblegum Sans',cursive; font-size:clamp(10px,2.5vw,12px);
           padding:4px 10px; border-radius:100px;
           box-shadow:2px 2px 0 rgba(0,0,0,.08); white-space:nowrap;
           animation: badgePop .5s cubic-bezier(.34,1.56,.64,1) forwards;
+        }
+        @media (max-width: 480px) {
+          .meme-badge { right:-8px; font-size:10px; }
         }
         @keyframes badgePop {
           from { opacity:0; transform:rotate(12deg) scale(0); }
           to   { opacity:1; transform:rotate(12deg) scale(1); }
         }
 
+        /* hide side florks on very small screens to prevent text overlap */
+        @media (max-width: 480px) {
+          .flork { display: none; }
+        }
+
         /* button */
         .enter-btn {
-          margin-top:44px; padding:14px 52px;
+          margin-top:clamp(20px,5vw,44px); padding:14px clamp(28px,8vw,52px);
           background:linear-gradient(135deg,#f472b6,#ec4899);
           border:none; border-radius:100px; color:#fff;
           font-family:'Bubblegum Sans',cursive; font-size:17px;
@@ -274,7 +283,7 @@ export default function Intro() {
         @keyframes shimmer   { 0%,100%{left:-100%} 50%{left:140%} }
 
         /* petals */
-        .petal { position:fixed; top:-20px; border-radius:50% 0 50% 0; opacity:0; pointer-events:none; animation:petalFall linear infinite; }
+        .petal { position:fixed; top:-20px; border-radius:50% 0 50% 0; opacity:0; pointer-events:none; animation:petalFall linear infinite; will-change:transform,opacity; }
         @keyframes petalFall {
           0%  { transform:translateY(0) rotate(0deg) translateX(0); opacity:0; }
           8%  { opacity:.7; }
@@ -283,7 +292,7 @@ export default function Intro() {
         }
 
         /* hearts */
-        .heart { position:fixed; pointer-events:none; opacity:0; animation:heartFloat linear infinite; }
+        .heart { position:fixed; pointer-events:none; opacity:0; animation:heartFloat linear infinite; will-change:transform,opacity; }
         @keyframes heartFloat {
           0%  { opacity:0; transform:translateY(0) scale(.5); }
           12% { opacity:.8; }

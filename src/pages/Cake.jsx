@@ -112,7 +112,7 @@ export default function Cake() {
     const setup = async () => {
       try {
         stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const AudioCtx = window.AudioContext || /** @type {any} */(window).webkitAudioContext;
         const ctx = new AudioCtx();
         const source = ctx.createMediaStreamSource(stream);
         const analyser = ctx.createAnalyser();
@@ -170,13 +170,13 @@ export default function Cake() {
         @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Great+Vibes&family=Quicksand:wght@300;400;500&display=swap');
 
         .cake-page {
-          width:100vw; min-height:100vh;
+          width:100%; min-height:100vh;
           background:linear-gradient(160deg,#fff0f5 0%,#ffe4ef 45%,#ffd6e8 100%);
           display:flex; flex-direction:column;
           align-items:center; justify-content:center;
           font-family:'Quicksand',sans-serif;
-          position:relative; overflow:hidden;
-          padding:24px 20px 40px; user-select:none;
+          position:relative; overflow-x:hidden;
+          padding:24px 16px 40px; user-select:none;
         }
         .cake-page::before {
           content:''; position:fixed; inset:0; pointer-events:none;
@@ -217,7 +217,7 @@ export default function Cake() {
 
         /* ── candle rows ── */
         .candles-area { display:flex; flex-direction:column; align-items:center; gap:5px; }
-        .candles-row  { display:flex; gap:7px; align-items:flex-end; }
+        .candles-row  { display:flex; gap:clamp(3px,1.5vw,7px); align-items:flex-end; }
 
         /* ── single candle ── */
         .candle {
@@ -271,14 +271,14 @@ export default function Cake() {
         .cake-body { display:flex; flex-direction:column; align-items:center; }
 
         .cake-top-plate {
-          width:260px; height:14px;
+          width:min(260px,80vw); height:14px;
           background:linear-gradient(to bottom,#fce7f3,#f9a8d4);
           border-radius:50%;
           box-shadow:0 4px 10px rgba(244,114,182,.22);
           z-index:4; margin-top:-2px;
         }
         .cake-tier1 {
-          width:240px; height:70px;
+          width:min(240px,74vw); height:70px;
           background:linear-gradient(to bottom,#fff0f5,#fce7f3 45%,#fda4af);
           border-radius:4px;
           position:relative; overflow:hidden;
@@ -306,7 +306,7 @@ export default function Cake() {
         @keyframes hbeat { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
 
         .cake-tier2 {
-          width:200px; height:52px;
+          width:min(200px,62vw); height:52px;
           background:linear-gradient(to bottom,#fce7f3,#fbcfe8 45%,#f9a8d4);
           position:relative; overflow:hidden;
         }
@@ -316,7 +316,7 @@ export default function Cake() {
           opacity:.38;
         }
         .cake-base-plate {
-          width:280px; height:16px;
+          width:min(280px,86vw); height:16px;
           background:linear-gradient(to bottom,#fda4af,#fbb6d4);
           border-radius:0 0 50% 50%;
           box-shadow:0 6px 16px rgba(244,114,182,.2);
@@ -324,7 +324,7 @@ export default function Cake() {
 
         /* ── note toast ── */
         .note-toast {
-          position:fixed; bottom:100px; left:50%;
+          position:fixed; bottom:max(20px,8vh); left:50%;
           background:rgba(255,255,255,.96);
           border:2px solid rgba(244,114,182,.3);
           border-radius:100px; padding:10px 24px;
@@ -356,7 +356,7 @@ export default function Cake() {
 
         .wish-headline {
           font-family:'Great Vibes',cursive;
-          font-size:clamp(38px,7vw,66px); color:#ec4899; line-height:1.2;
+          font-size:clamp(26px,7vw,66px); color:#ec4899; line-height:1.2;
         }
         .wish-subtext {
           font-size:14px; color:rgba(190,24,93,.58);
@@ -374,7 +374,7 @@ export default function Cake() {
         .back-hub-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(244,114,182,.55); }
 
         /* ── confetti ── */
-        .cf { position:fixed; top:-12px; pointer-events:none; animation:cfFall linear forwards; }
+        .cf { position:fixed; top:-12px; pointer-events:none; animation:cfFall linear forwards; will-change:transform,opacity; }
         @keyframes cfFall { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(110vh) rotate(740deg);opacity:0} }
       `}</style>
 

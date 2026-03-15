@@ -188,11 +188,11 @@ export default function WishCard() {
         *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
         .wp {
-          width:100vw; min-height:100vh;
+          width:100%; min-height:100vh;
           background:linear-gradient(160deg,#fff0f5 0%,#ffe4ef 50%,#ffd6e8 100%);
           display:flex; flex-direction:column; align-items:center;
           font-family:'Quicksand',sans-serif;
-          position:relative; overflow-x:hidden; padding-bottom:80px;
+          position:relative; overflow-x:hidden; padding-bottom:clamp(40px,8vh,80px);
         }
         .wp::before {
           content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
@@ -228,7 +228,7 @@ export default function WishCard() {
         /* intro */
         .intro { display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:22px;padding:32px 20px;animation:fadeIn .8s ease both; }
         .env   { font-size:90px; animation:floatBob 3s ease-in-out infinite; filter:drop-shadow(0 8px 22px rgba(244,114,182,.3)); }
-        .intro-title { font-family:'Bubblegum Sans',cursive; font-size:clamp(24px,5vw,40px); color:#ec4899; text-shadow:2px 2px 0 rgba(251,113,133,.2); text-align:center; animation:fadeUp .8s ease .2s both; }
+        .intro-title { font-family:'Bubblegum Sans',cursive; font-size:clamp(18px,5vw,40px); color:#ec4899; text-shadow:2px 2px 0 rgba(251,113,133,.2); text-align:center; animation:fadeUp .8s ease .2s both; padding:0 12px; }
         .intro-sub   { font-size:13px; color:rgba(190,24,93,.48); text-align:center; letter-spacing:.04em; animation:fadeUp .8s ease .3s both; }
         .open-btn {
           padding:15px 56px; background:linear-gradient(135deg,#f472b6,#ec4899);
@@ -243,13 +243,13 @@ export default function WishCard() {
         .open-btn::after { content:''; position:absolute; top:0; left:-100%; width:55%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent); transform:skewX(-20deg); animation:shimmer 3.5s ease-in-out infinite 2s; }
 
         /* letter */
-        .letter-wrap { width:100%; max-width:680px; padding:0 20px; margin-top:32px; }
+        .letter-wrap { width:100%; max-width:680px; padding:0 clamp(12px,4vw,20px); margin-top:32px; }
         .letter-card {
           background:rgba(255,255,255,.88); border:2px solid rgba(244,114,182,.2);
-          border-radius:24px; padding:36px 32px;
+          border-radius:clamp(14px,4vw,24px); padding:clamp(20px,5vw,36px) clamp(16px,5vw,32px);
           box-shadow:0 12px 48px rgba(244,114,182,.14),0 2px 8px rgba(0,0,0,.04);
           backdrop-filter:blur(8px);
-          display:flex; flex-direction:column; gap:20px;
+          display:flex; flex-direction:column; gap:clamp(14px,3vw,20px);
           animation:fadeUp .7s ease both;
         }
         .letter-top {
@@ -269,15 +269,15 @@ export default function WishCard() {
         /* finale */
         .finale { width:100%; max-width:680px; padding:0 20px; display:flex; flex-direction:column; align-items:center; gap:22px; margin-top:28px; animation:fadeUp .8s ease both; }
         .seal   { width:82px; height:82px; border-radius:50%; background:radial-gradient(circle at 38% 38%,#f472b6,#be185d); display:flex; align-items:center; justify-content:center; font-size:34px; box-shadow:0 6px 24px rgba(190,24,93,.36),inset 0 2px 6px rgba(255,255,255,.2); animation:sealSpin 3.2s ease-in-out infinite; }
-        .fin-quote { font-family:'Great Vibes',cursive; font-size:clamp(22px,4.5vw,36px); color:#ec4899; text-align:center; line-height:1.5; text-shadow:1px 1px 0 rgba(251,113,133,.18); animation:fadeUp .8s ease .2s both; }
+        .fin-quote { font-family:'Great Vibes',cursive; font-size:clamp(16px,4.5vw,36px); color:#ec4899; text-align:center; line-height:1.5; text-shadow:1px 1px 0 rgba(251,113,133,.18); animation:fadeUp .8s ease .2s both; max-width:90vw; word-break:break-word; }
         .flork-row { display:flex; align-items:flex-end; justify-content:center; gap:16px; flex-wrap:wrap; animation:florkPop .7s cubic-bezier(.34,1.56,.64,1) both; }
         .hub-btn { padding:14px 52px; background:linear-gradient(135deg,#f472b6,#ec4899); border:none; border-radius:100px; color:#fff; font-family:'Bubblegum Sans',cursive; font-size:17px; cursor:pointer; box-shadow:0 8px 26px rgba(244,114,182,.45); transition:transform .25s,box-shadow .25s; animation:fadeUp .8s ease .5s both; }
         .hub-btn:hover { transform:translateY(-3px); box-shadow:0 14px 36px rgba(244,114,182,.58); }
 
         /* floaters */
-        .petal { position:fixed; top:-20px; border-radius:50% 0 50% 0; opacity:0; pointer-events:none; animation:petalFall linear infinite; z-index:10; }
-        .hf    { position:fixed; pointer-events:none; opacity:0; animation:heartRise linear infinite; z-index:10; }
-        .cf    { position:fixed; top:-14px; pointer-events:none; animation:cfFall linear forwards; z-index:10; }
+        .petal { position:fixed; top:-20px; border-radius:50% 0 50% 0; opacity:0; pointer-events:none; animation:petalFall linear infinite; z-index:10; will-change:transform,opacity; }
+        .hf    { position:fixed; pointer-events:none; opacity:0; animation:heartRise linear infinite; z-index:10; will-change:transform,opacity; }
+        .cf    { position:fixed; top:-14px; pointer-events:none; animation:cfFall linear forwards; z-index:10; will-change:transform,opacity; }
       `}</style>
 
       {/* petals */}
